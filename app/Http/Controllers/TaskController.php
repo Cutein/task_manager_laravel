@@ -35,11 +35,15 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'tags' => 'nullable|array',
+            'due_date' => 'nullable|date',
         ]);
     
         $board->tasks()->create([
             'title' => $request->title,
             'description' => $request->description,
+            'tags' => $request->tags, // Laravel lo convertirá automáticamente a JSON
+            'due_date' => $request->due_date,
         ]);
     
         return redirect()->route('boards.show', $board)->with('success', 'Tarea creada correctamente.');
@@ -82,12 +86,16 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'tags' => 'nullable|array',
+            'due_date' => 'nullable|date',
         ]);
     
         // Actualizar la tarea
         $task->update([
             'title' => $request->title,
             'description' => $request->description,
+            'tags' => $request->tags,
+            'due_date' => $request->due_date,
         ]);
     
         return redirect()->route('tasks.show', $task)

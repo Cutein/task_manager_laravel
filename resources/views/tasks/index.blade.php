@@ -18,6 +18,8 @@
                             <tr class="bg-gray-100">
                                 <th class="border border-gray-300 px-4 py-2 text-left">Título</th>
                                 <th class="border border-gray-300 px-4 py-2 text-left">Tablero</th>
+                                <th class="border border-gray-300 px-4 py-2 text-left">Fecha de vencimiento</th>
+                                <th class="border border-gray-300 px-4 py-2 text-left">Etiquetas</th>
                                 <th class="border border-gray-300 px-4 py-2 text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -31,6 +33,12 @@
                                     </td>
                                     <td class="px-4 py-2">
                                         {{ $task->board->name ?? 'Sin tablero' }}
+                                    </td>
+                                    <td>
+                                        <p>{{ $task->due_date ?$task->due_date->format('d/m/Y'): 'No definida' }}</p>
+                                    </td>
+                                    <td>
+                                        <p>{{ implode(', ', $task->tags) }}</p>
                                     </td>
                                     <td class="px-4 py-2 text-right">
                                         <!-- Dropdown de estado -->

@@ -15,6 +15,9 @@
                 <!-- Fecha de Creación -->
                 <p class="text-sm text-gray-500 mt-2">Creada el {{ $task->created_at->format('d/m/Y') }}</p>
 
+                <p><strong>Fecha de vencimiento:</strong> {{ $task->due_date ?$task->due_date->format('d/m/Y'): 'No definida' }}</p>
+                <p><strong>Etiquetas:</strong> {{ implode(', ', $task->tags) }}</p>
+
                 <!-- Estado de la Tarea -->
                 <p class="mt-4"><strong>Estado:</strong> 
                     <span class="px-2 py-1 rounded 
@@ -22,7 +25,18 @@
                         {{ ucfirst($task->status) }}
                     </span>
                 </p>
+                <!-- Lista de comentarios -->
+                <h3>Comentarios</h3>
+                @foreach($task->comments as $comment)
+                    <p><strong>{{ $comment->user->name }}</strong>: {{ $comment->content }}</p>
+                @endforeach
 
+                <!-- Formulario para agregar un comentario -->
+                <form action="{{ route('tasks.comments.store', $task) }}" method="POST">
+                    @csrf
+                    <textarea class="w-full" name="content" required></textarea>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" type="submit">Comentar</button>
+                </form>
                 <!-- Botones de Acción -->
                 <div class="mt-6 flex space-x-2">
                     <a href="{{ route('tasks.edit', $task) }}" 

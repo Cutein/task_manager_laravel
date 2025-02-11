@@ -24,7 +24,17 @@
                         <label class="block font-medium text-sm text-gray-700">Descripción</label>
                         <textarea name="description" class="w-full border-gray-300 rounded-md shadow-sm">{{ old('description', $task->description) }}</textarea>
                     </div>
-
+                    <div class="mb-4">
+                        <label for="due_date">Fecha de vencimiento:</label>
+                        <input type="date" name="due_date" 
+                        value="{{ old('due_date', $task->due_date ? $task->due_date->format('Y-m-d') : '') }}">
+                 
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="tags">Etiquetas (separadas por comas):</label>
+                        <input type="text" name="tags[]" value="{{ old('tags', isset($task) ? implode(',', $task->tags) : '') }}">
+                    </div>
                     <div class="flex space-x-2">
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Guardar</button>
                         <a href="{{ route('boards.show', $task->board) }}" class="bg-gray-500 text-white px-4 py-2 rounded">Cancelar</a>

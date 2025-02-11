@@ -24,6 +24,17 @@
                                   class="w-full border-gray-300 rounded-md shadow-sm"></textarea>
                     </div>
 
+                    <div class="mb-4">
+                        <label for="due_date">Fecha de vencimiento:</label>
+                        <input type="date" name="due_date">
+                 
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="tags">Etiquetas (separadas por comas):</label>
+                        <input type="text" name="tags[]">
+                    </div>
+
                     <div class="flex justify-end">
                         <a href="{{ route('boards.show', $board) }}" 
                            class="mr-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-black">Cancelar</a>
