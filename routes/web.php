@@ -14,4 +14,10 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::get('/boards.index', function () {
+        return view('boards.index');
+    })->name('boards.index');
+    Route::get('/tasks.index', function () {
+        return view('tasks.index');
+    })->name('tasks.index');
 });
