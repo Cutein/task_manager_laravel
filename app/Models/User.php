@@ -31,6 +31,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'is_active',
     ];
 
     /**
@@ -70,5 +72,9 @@ class User extends Authenticatable
     public function boards()
     {
         return $this->hasMany(Board::class);
+    }
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_user')->withTimestamps();
     }
 }

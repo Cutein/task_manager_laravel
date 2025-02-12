@@ -34,7 +34,25 @@
                         <label for="tags">Etiquetas (separadas por comas):</label>
                         <input type="text" name="tags[]">
                     </div>
+                    <div class="mb-4">
+                        <label for="user-select">Asignar usuarios:</label>
+                        <select id="user-select" class="w-64 border rounded px-2 py-1">
+                            <option value="">Seleccione un usuario</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>                      
+                    </div>
+                    
+                    <!-- Aquí se mostrarán los usuarios seleccionados -->
+                    <div id="selected-users" class="mt-2">
+                        @foreach($task->users as $user)
+                            <span data="id-{{ $user->id }}" class="bg-gray-200 text-gray-800 px-2 py-1 rounded mr-2 inline-block"> {{ $user->name }}<button class="ml-1 text-red-500 text-sm">×</button></span>
+                        @endforeach
+                    </div>
 
+                    <!-- Campo oculto para enviar los IDs seleccionados -->
+                    <input type="hidden" name="users[]" id="users-input">
                     <div class="flex justify-end">
                         <a href="{{ route('boards.show', $board) }}" 
                            class="mr-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-black">Cancelar</a>
@@ -47,4 +65,5 @@
             </div>
         </div>
     </div>
+    @vite('resources/js/task-users.js')
 </x-app-layout>

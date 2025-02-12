@@ -21,9 +21,10 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Board $board)
+    public function create(Board $board, Task $task)
     {
-        return view('tasks.create', compact('board'));
+        $users = \App\Models\User::all(); // Obtener todos los usuarios
+        return view('tasks.create', compact('board','users','task'));
     }
     
 
@@ -32,20 +33,38 @@ class TaskController extends Controller
      */
     public function store(Request $request, Board $board)
     {
+        $request->merge([
+            'users' => explode(',', $request->users[0] ?? '')
+        ]);
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'tags' => 'nullable|array',
             'due_date' => 'nullable|date',
+            'users' => 'array', // Validar usuarios
+            'users.*' => 'exists:users,id', // Cada usuario debe existir
         ]);
     
-        $board->tasks()->create([
+        $task = $board->tasks()->create([
             'title' => $request->title,
             'description' => $request->description,
             'tags' => $request->tags, // Laravel lo convertirá automáticamente a JSON
             'due_date' => $request->due_date,
         ]);
-    
+
+        // Asignar usuarios a la tarea
+        if ($request->has('users')) {
+            $task->users()->sync($request->users);
+              // Enviar notificaciones a los usuarios asignados
+            foreach ($request->users as $userId) {
+                $user = \App\Models\User::find($userId);
+                if ($user) {
+                    $user->notify(new \App\Notifications\TaskAssignedNotification($task));
+                }
+            }
+        }
+
         return redirect()->route('boards.show', $board)->with('success', 'Tarea creada correctamente.');
     }
     
@@ -55,6 +74,8 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
+        $task->load('users'); // Cargar usuarios asignados
+
         return view('tasks.show', compact('task'));
     }
 
@@ -68,7 +89,9 @@ class TaskController extends Controller
             abort(403, 'No tienes permiso para editar esta tarea.');
         }
     
-        return view('tasks.edit', compact('task'));
+        $users = \App\Models\User::all(); // Obtener todos los usuarios
+
+        return view('tasks.edit', compact('task', 'users'));
     }
     
 
@@ -77,17 +100,22 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
+        $request->merge([
+            'users' => explode(',', $request->users[0] ?? '')
+        ]);
         // Verificar si el usuario es dueño del tablero al que pertenece la tarea
         if ($task->board->user_id !== auth()->id()) {
             abort(403, 'No tienes permiso para actualizar esta tarea.');
         }
-    
+
         // Validar los datos
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'tags' => 'nullable|array',
             'due_date' => 'nullable|date',
+            'users' => 'array',
+            'users.*' => 'exists:users,id',
         ]);
     
         // Actualizar la tarea
@@ -98,6 +126,16 @@ class TaskController extends Controller
             'due_date' => $request->due_date,
         ]);
     
+        if ($request->has('users')) {
+            $task->users()->sync($request->users); // Asigna los usuarios
+            // Enviar notificaciones a los usuarios asignados
+            foreach ($request->users as $userId) {
+                $user = \App\Models\User::find($userId);
+                if ($user) {
+                    $user->notify(new \App\Notifications\TaskAssignedNotification($task));
+                }
+            }
+        }
         return redirect()->route('tasks.show', $task)
                          ->with('success', 'Tarea actualizada correctamente.');
     }

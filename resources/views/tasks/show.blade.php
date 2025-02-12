@@ -37,6 +37,18 @@
                     <textarea class="w-full" name="content" required></textarea>
                     <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" type="submit">Comentar</button>
                 </form>
+
+                <div>
+                    <p><strong>Asignado a:</strong> 
+                        @forelse($task->users as $user)
+                            <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded">{{ $user->name }}</span>
+                        @empty
+                            <span class="text-gray-500">No asignado</span>
+                        @endforelse
+                    </p>
+                    
+                </div>
+
                 <!-- Botones de Acción -->
                 <div class="mt-6 flex space-x-2">
                     <a href="{{ route('tasks.edit', $task) }}" 
