@@ -13,8 +13,15 @@
             <!-- Gestión de Tableros -->
             <div class="bg-white p-4 shadow rounded-lg">
                 <h2 class="text-lg font-semibold mb-2">Tableros</h2>
-                <p class="text-gray-600">Gestionar tableros y tareas.</p>
+                <p class="text-gray-600">Gestionar tableros.</p>
                 <a href="{{ route('admin.boards') }}" class="text-blue-500 hover:underline">Ver detalles</a>
+            </div>
+
+            <!-- Gestión de Tareas -->
+            <div class="bg-white p-4 shadow rounded-lg">
+                <h2 class="text-lg font-semibold mb-2">Tareas</h2>
+                <p class="text-gray-600">Gestionar tareas.</p>
+                <a href="{{ route('admin.tasks') }}" class="text-blue-500 hover:underline">Ver detalles</a>
             </div>
 
             <!-- Reportes y Estadísticas -->

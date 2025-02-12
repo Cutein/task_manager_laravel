@@ -180,5 +180,10 @@ class TaskController extends Controller
 
         return redirect()->back()->with('success', 'Estado de la tarea actualizado.');
     }
-
+    public function deleteTask(Task $task)
+    {
+        $task->delete();
+        return redirect()->route('admin.tasks')->with('success', 'Tarea eliminada correctamente.');
+    }
+    
 }

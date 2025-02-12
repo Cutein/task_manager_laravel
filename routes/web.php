@@ -34,8 +34,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users', [AdminController::class, 'users'])->name('users');
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
     Route::get('/boards', [AdminController::class, 'boards'])->name('boards');
+    Route::get('/boards/{board}/edit', [AdminController::class, 'editBoard'])->name('boards.edit');
+    Route::put('/boards/{board}', [AdminController::class, 'updateBoard'])->name('boards.update');
+    Route::delete('/boards/{board}', [AdminController::class, 'deleteBoard'])->name('boards.delete');
+    
     Route::get('/tasks', [AdminController::class, 'tasks'])->name('tasks');
+    Route::get('/tasks/{task}/edit', [AdminController::class, 'editTask'])->name('tasks.edit');
+    Route::put('/tasks/{task}', [AdminController::class, 'updateTask'])->name('tasks.update');
+    Route::delete('/tasks/{task}', [AdminController::class, 'deleteTask'])->name('tasks.delete');
+    
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
 });
