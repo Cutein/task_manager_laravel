@@ -45,6 +45,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/tasks/{task}', [AdminController::class, 'updateTask'])->name('tasks.update');
     Route::delete('/tasks/{task}', [AdminController::class, 'deleteTask'])->name('tasks.delete');
     
-    Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
+    Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
 });

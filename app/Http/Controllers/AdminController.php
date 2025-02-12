@@ -130,4 +130,23 @@ class AdminController extends Controller
         return redirect()->route('admin.tasks', $task->board)
                         ->with('success', 'Tarea eliminada correctamente.');
     }
+
+    public function reports()
+    {
+        $totalUsers = User::count();
+        $activeUsers = User::where('is_active', 1)->count();
+        $totalBoards = Board::count();
+        $totalTasks = Task::count();
+        $completedTasks = Task::where('status', 'completada')->count();
+        $pendingTasks = Task::where('status', 'en_proceso')->count();
+        $tasksByBoard = Board::withCount('tasks')->get();
+        $tasksByUser = User::withCount('tasks')->get();
+
+        return view('admin.reports', compact(
+            'totalUsers', 'activeUsers', 'totalBoards', 
+            'totalTasks', 'completedTasks', 'pendingTasks', 
+            'tasksByBoard', 'tasksByUser'
+        ));
+    }
+
 }
