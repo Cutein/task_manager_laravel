@@ -1,3 +1,57 @@
+# 📝 Proyecto de Gestión de Tareas con Laravel
+
+Este es un sistema de gestión de tareas desarrollado con **Laravel**, que permite a los usuarios crear, asignar y administrar tareas dentro de tableros organizados.
+
+## 🚀 Tecnologías Utilizadas
+
+- **Laravel 11** - Framework PHP
+- **Jetstream** - Autenticación y manejo de usuarios
+- **Livewire** - Interactividad sin recargar la página
+- **Blade Components** - Componentes reutilizables en vistas
+- **Sanctum** - Autenticación API ligera
+- **MySQL** - Base de datos
+- **Tailwind CSS** - Diseño y estilos
+
+---
+
+## 📂 Instalación y Configuración
+
+- **Dependencias**
+composer install
+npm install
+
+- **Configurar el entorno**
+Renombrar el archivo .env.example a .env y configurar la base de datos
+
+- **Generar la clave de aplicación**
+php artisan key:generate
+
+- **Migrar la base de datos**
+php artisan migrate --seed
+
+- **Compilar los assets**
+npm run build
+
+- **Iniciar**
+npm run dev
+
+- **Se probo crendo un host con MAMP pro**
+
+
+## 📌 Funcionalidades
+✅ Registro e inicio de sesión con Laravel Jetstream
+✅ Creación y gestión de tareas
+✅ Asignación de tareas a usuarios
+✅ Gestión de tableros y etiquetas
+✅ Cambios de estado en tareas
+✅ Reportes de tareas y estadísticas
+
+**Desarrollado por: Joanne David Orozco Ramos**
+
+
+
+```sh
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
