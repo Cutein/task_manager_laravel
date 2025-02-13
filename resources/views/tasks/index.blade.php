@@ -2,14 +2,17 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <h3 class="text-lg font-bold mb-4">Lista de Tareas</h3>
+                <h3 class="text-lg font-bold mb-4 flex items-center">
+                    <x-heroicon-o-clipboard-document-list class="w-6 h-6 text-gray-700 mr-2" />
+                    Lista de Tareas
+                </h3>
 
                 @if ($tasks->isEmpty())
                     <p class="text-gray-500">No hay tareas aún.</p>
                 @else
-                    <table class="w-full border-collapse border border-gray-200">
+                    <table class="w-full border-collapse border border-gray-200 rounded-lg shadow-md">
                         <thead>
-                            <tr class="bg-gray-100">
+                            <tr class="bg-gray-100 text-gray-700">
                                 <th class="border border-gray-300 px-4 py-2 text-left">Título</th>
                                 <th class="border border-gray-300 px-4 py-2 text-left">Tablero</th>
                                 <th class="border border-gray-300 px-4 py-2 text-left">Fecha de vencimiento</th>
@@ -19,28 +22,31 @@
                         </thead>
                         <tbody>
                             @foreach ($tasks as $task)
-                                <tr class="border-b border-gray-200">
-                                    <td class="px-4 py-2">
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                                    <td class="px-4 py-3 flex items-center">
+                                        <x-heroicon-o-document-text class="w-5 h-5 text-gray-500 mr-2" />
                                         <a href="{{ route('tasks.show', $task->id) }}" class="text-blue-500 hover:underline">
                                             {{ $task->title }}
                                         </a>
                                     </td>
-                                    <td class="px-4 py-2">
+                                    <td class="px-4 py-3">
                                         {{ $task->board->name ?? 'Sin tablero' }}
                                     </td>
-                                    <td>
-                                        <p>{{ $task->due_date ?$task->due_date->format('d/m/Y'): 'No definida' }}</p>
+                                    <td class="px-4 py-3 text-gray-600">
+                                        {{ $task->due_date ? $task->due_date->format('d/m/Y') : 'No definida' }}
                                     </td>
-                                    <td>
-                                        <p>{{ implode(', ', $task->tags) }}</p>
+                                    <td class="px-4 py-3">
+                                        <span class="text-sm text-gray-700 bg-gray-200 px-2 py-1 rounded">
+                                            {{ implode(', ', $task->tags) }}
+                                        </span>
                                     </td>
-                                    <td class="px-4 py-2 text-right">
+                                    <td class="px-4 py-3 text-right flex justify-end space-x-2">
                                         <!-- Dropdown de estado -->
-                                        <form action="{{ route('tasks.updateStatus', $task) }}" method="POST" class="inline-block ml-auto mr-4">
+                                        <form action="{{ route('tasks.updateStatus', $task) }}" method="POST" class="inline-block">
                                             @csrf
                                             @method('PATCH')
                                             <select name="status" onchange="this.form.submit()" 
-                                                    class="w-40 px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700">
+                                                    class="w-36 px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700">
                                                 @foreach (\App\Models\Task::getStatuses() as $value => $label)
                                                     <option value="{{ $value }}" {{ $task->status === $value ? 'selected' : '' }}>
                                                         {{ $label }}
@@ -48,23 +54,26 @@
                                                 @endforeach
                                             </select>
                                         </form>
-                                        
+
+                                        <!-- Botón Editar -->
                                         <a href="{{ route('tasks.edit', $task->id) }}" 
-                                           class="mr-2 inline-block px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                                           class="flex items-center bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded transition">
+                                            <x-heroicon-o-pencil-square class="w-5 h-5 mr-1" />
                                             Editar
                                         </a>
                                     
+                                        <!-- Botón Eliminar -->
                                         <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="inline-block">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" 
-                                                    class="inline-block px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+                                                    class="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition"
                                                     onclick="return confirm('¿Seguro que quieres eliminar esta tarea?');">
+                                                <x-heroicon-o-trash class="w-5 h-5 mr-1" />
                                                 Eliminar
                                             </button>
                                         </form>
-                                    </td>
-                                    
+                                    </td>  
                                 </tr>
                             @endforeach
                         </tbody>

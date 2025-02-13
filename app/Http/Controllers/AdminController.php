@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Board;
 use App\Models\Task;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -16,11 +17,6 @@ class AdminController extends Controller
     {
         $users = User::paginate(10); // Paginación de 10 usuarios por página
         return view('admin.users', compact('users'));
-    }
-
-    public function settings()
-    {
-        return view('admin.settings');
     }
 
     public function editUser(User $user)
@@ -148,5 +144,25 @@ class AdminController extends Controller
             'tasksByBoard', 'tasksByUser'
         ));
     }
-
+    public function settings()
+    {
+        return view('admin.settings');
+    }
+    
+    public function updateSettings(Request $request)
+    {
+        $request->validate([
+            'app_name' => 'required|string|max:255',
+            'app_logo' => 'nullable|image|max:2048', // Máximo 2MB
+        ]);
+    
+        Setting::set('app_name', $request->app_name);
+    
+        if ($request->hasFile('app_logo')) {
+            $logoPath = $request->file('app_logo')->store('logos', 'public');
+            Setting::set('app_logo', $logoPath);
+        }
+    
+        return redirect()->route('admin.settings')->with('success', 'Configuración actualizada correctamente.');
+    }
 }

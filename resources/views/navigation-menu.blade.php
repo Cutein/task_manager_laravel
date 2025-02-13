@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-blue-800 border-b border-gray-100">
+<nav x-data="{ open: false }" class="gradient-bg border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -13,7 +13,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if(Auth::user()->role=='admin')
-                        <x-nav-link  href="{{ route('admin.dashboard') }}" :active="request()->routeIs('dashboard')">
+                        <x-nav-link  href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                             {{ __('Admin') }}
                         </x-nav-link>
                     @endif
@@ -29,8 +29,56 @@
                     </x-nav-link>
                 </div>
             </div>
-
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                             <!-- Notificaciones -->
+            <div>
+                @php
+                    $notifications = auth()->user()->unreadNotifications;
+                @endphp
+
+                <div class="relative float-right" x-data="{ open: false }">
+                    <button @click="open = !open" class="bg-blue-500 text-white px-4 py-2 rounded">
+                        🔔 Notificaciones ({{ $notifications->count() }})
+                    </button>
+                    
+                    <div x-show="open" @click.away="open = false" class="absolute bg-white shadow-md mt-2 w-64 rounded-lg overflow-y-auto max-h-96 w-64">
+                        @forelse($notifications as $notification)
+                            <div class="flex items-start p-4 border-b bg-gray-50 hover:bg-gray-100 transition">
+                                <!-- Icono -->
+                                <div class="flex-shrink-0">
+                                    <x-heroicon-o-bell class="w-6 h-6 text-red-300 fill-red-500" />
+                                </div>
+
+                                <!-- Contenido de la notificación -->
+                                <div class="ml-3">
+                                    <p class="text-sm font-semibold text-gray-700">
+                                        {{ $notification->data['task_title'] }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        Asignado por: <span class="font-medium">{{ $notification->data['assigned_by'] }}</span>
+                                    </p>
+
+                                    <!-- Acciones -->
+                                    <div class="mt-2 flex items-center gap-2">
+                                        <!-- Icono para Ver tarea -->
+                                        <a href="{{ route('tasks.show', $notification->data['task_id']) }}" class="text-blue-500 hover:text-blue-700">
+                                            <x-heroicon-o-eye class="w-6 h-6" />
+                                        </a>
+
+                                        <!-- Icono para Marcar como leída -->
+                                        <button class="text-green-500 hover:text-green-700" onclick="markNotificationAsRead('{{ $notification->id }}')">
+                                            <x-heroicon-o-check-circle class="w-6 h-6" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="p-4 text-center text-gray-500">No hay notificaciones</p>
+                        @endforelse
+
+                    </div>
+                </div>
+            </div>
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ms-3 relative">
@@ -229,3 +277,4 @@
         </div>
     </div>
 </nav>
+@vite('resources/js/notifications.js')
