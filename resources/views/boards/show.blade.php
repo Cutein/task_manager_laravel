@@ -55,12 +55,13 @@
                                 <li class="border-b py-3 flex items-center">
                                         
                                     <!-- Enlace al detalle de la tarea -->
-                                    <a href="{{ route('tasks.show', $task->id) }}" 
-                                    class="text-blue-500 hover:text-blue-700 font-medium flex-1">
-                                        <x-heroicon-o-document-text class="w-5 h-5 text-gray-600 mr-2 inline-block" />
-                                        {{ $task->title }}
-                                    </a>
-
+                                    <div class="flex-1">
+                                        <a href="{{ route('tasks.show', $task->id) }}" 
+                                        class="hover:bg-gray-100 text-blue-500 hover:text-blue-700 font-medium">
+                                            <x-heroicon-o-document-text class="w-5 h-5 text-gray-600 mr-2 inline-block" />
+                                            {{ $task->title }}
+                                        </a>
+                                    </div>
                                     <!-- Dropdown de estado -->
                                     @livewire('update-task-status', ['task' => $task])
 

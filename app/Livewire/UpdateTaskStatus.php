@@ -11,7 +11,7 @@ class UpdateTaskStatus extends Component
     public $status;
 
     protected $rules = [
-        'status' => 'required|in:pausada,en_proceso,completada',
+        'status' => 'required|in:nueva,pausada,en_proceso,completada',
     ];
 
     public function mount(Task $task)

@@ -50,14 +50,7 @@
                                         <form action="{{ route('tasks.updateStatus', $task) }}" method="POST" class="inline-block">
                                             @csrf
                                             @method('PATCH')
-                                            <select name="status" onchange="this.form.submit()" 
-                                                    class="w-36 px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700">
-                                                @foreach (\App\Models\Task::getStatuses() as $value => $label)
-                                                    <option value="{{ $value }}" {{ $task->status === $value ? 'selected' : '' }}>
-                                                        {{ $label }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                            @livewire('update-task-status', ['task' => $task])
                                         </form>
 
                                         <!-- Botón Editar -->
@@ -105,14 +98,7 @@
                                         <form action="{{ route('tasks.updateStatus', $aTask) }}" method="POST" class="inline-block">
                                             @csrf
                                             @method('PATCH')
-                                            <select name="status" onchange="this.form.submit()" 
-                                                    class="w-36 px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700">
-                                                @foreach (\App\Models\Task::getStatuses() as $value => $label)
-                                                    <option value="{{ $value }}" {{ $aTask->status === $value ? 'selected' : '' }}>
-                                                        {{ $label }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                            @livewire('update-task-status', ['task' => $task])
                                         </form>
                                     </td>  
                                 </tr>
@@ -123,4 +109,5 @@
             </div>
         </div>
     </div>
+    @vite('resources/js/boards.js')
 </x-app-layout>

@@ -54,10 +54,21 @@ class Task extends Model
     public static function getStatusColor($status)
     {
         return match ($status) {
+            'nueva' => '#ffffff',  // Amarillo
             'pausada' => '#fcd34d',  // Amarillo
             'en_proceso' => '#60a5fa', // Azul
             'completada' => '#34d399', // Verde
             default => '#e5e7eb', // Gris
+        };
+    }
+    public static function getStatusTxColor($status)
+    {
+        return match ($status) {
+            'nueva' => '#000000',  // Amarillo
+            'pausada' => '#000000',  // Amarillo
+            'en_proceso' => '#ffffff', // Azul
+            'completada' => '#ffffff', // Verde
+            default => '#000000', // Gris
         };
     }
 }
