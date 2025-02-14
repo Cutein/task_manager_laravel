@@ -27,7 +27,7 @@
                             onsubmit="return confirm('¿Seguro que deseas eliminar este tablero?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" 
+                            <button type="submit" onclick="this.disabled=true;this.form.submit();" 
                                     class="flex items-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition">
                                 <x-heroicon-o-trash class="w-5 h-5 mr-1" /> Eliminar
                             </button>
@@ -70,7 +70,7 @@
                                     <form action="{{ route('tasks.destroy', $task->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" 
+                                        <button type="submit" onclick="this.disabled=true;this.form.submit();" 
                                                 class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition flex items-center">
                                             <x-heroicon-o-trash class="w-5 h-5 mr-1" /> Eliminar
                                         </button>

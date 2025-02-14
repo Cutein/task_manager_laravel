@@ -56,7 +56,7 @@
                     <div class="flex justify-end">
                         <a href="{{ route('boards.show', $board) }}" 
                            class="mr-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-black">Cancelar</a>
-                        <button type="submit" 
+                        <button type="submit" onclick="this.disabled=true;this.form.submit();" 
                                 class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                             Guardar Tarea
                         </button>

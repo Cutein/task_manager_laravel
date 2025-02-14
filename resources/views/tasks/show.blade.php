@@ -58,7 +58,7 @@
                           onsubmit="return confirm('¿Seguro que deseas eliminar esta tarea?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
+                        <button type="submit" onclick="this.disabled=true;this.form.submit();"  class="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
                     </form>
                     @if ($task->board)
                         <a href="{{ route('boards.show', $task->board) }}" 
