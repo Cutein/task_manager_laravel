@@ -98,7 +98,7 @@
                                         <form action="{{ route('tasks.updateStatus', $aTask) }}" method="POST" class="inline-block">
                                             @csrf
                                             @method('PATCH')
-                                            @livewire('update-task-status', ['task' => $task])
+                                            @livewire('update-task-status', ['task' => $aTask])
                                         </form>
                                     </td>  
                                 </tr>
