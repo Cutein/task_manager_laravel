@@ -48,8 +48,8 @@
                             <x-heroicon-o-tag class="w-5 h-5 text-gray-500 mr-2" />
                             Etiquetas (separadas por comas)
                         </label>
-                        <input type="text" name="tags" 
-                               value="{{ old('tags', isset($task) ? implode(',', $task->tags) : '') }}"
+                        <input type="text" name="tags[]" 
+                               value="{{ old('tags', (isset($task) && $task->tags!=null) ? implode(',', $task->tags) : '') }}"
                                class="w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 p-2">
                     </div>
 
@@ -70,7 +70,7 @@
                     <!-- Lista de usuarios seleccionados -->
                     <div id="selected-users" class="mt-2">
                         @foreach($task->users as $user)
-                            <span data-id="{{ $user->id }}" class="bg-gray-200 text-gray-800 px-2 py-1 rounded mr-2 inline-block">
+                            <span data="id-{{ $user->id }}" class="bg-gray-200 text-gray-800 px-2 py-1 rounded mr-2 inline-block">
                                 {{ $user->name }}
                                 <button class="ml-1 text-red-500 text-sm">×</button>
                             </span>

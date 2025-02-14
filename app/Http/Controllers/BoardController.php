@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Board;
-
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class BoardController extends Controller
@@ -13,8 +13,16 @@ class BoardController extends Controller
      */
     public function index()
     {
-        $boards = auth()->user()->boards;
-        return view('boards.index', compact('boards'));
+        $user = auth()->user();
+        $boards = Board::where('user_id', $user->id)->get();; // Tableros creados por el usuario
+        $boardsWithAssignedTasks = Board::whereHas('tasks.users', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
+        })->get();; // Tableros con tareas asignadas al usuario
+        // Quitar los tableros que ya existen en $userBoards
+        $boardsWithAssignedTasks = $boardsWithAssignedTasks->reject(function ($board) use ($boards) {
+            return $boards->contains('id', $board->id);
+        });
+        return view('boards.index', compact('boards','boardsWithAssignedTasks'));
     }
 
     /**
@@ -45,7 +53,11 @@ class BoardController extends Controller
      */
     public function show(Board $board)
     {
-        return view('boards.show', compact('board'));
+        $user = auth()->user();
+        $assignedTasks = Task::whereHas('users', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
+        })->get();
+        return view('boards.show', compact('board', 'assignedTasks'));
     }
 
     /**

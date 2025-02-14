@@ -2,12 +2,17 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <h3 class="text-lg font-bold mb-4 flex items-center">
-                    <x-heroicon-o-clipboard-document-list class="w-6 h-6 text-gray-700 mr-2" />
-                    Lista de Tareas
-                </h3>
-
-                @if ($tasks->isEmpty())
+                <div class="flex items-left mb-6">
+                    <h3 class="inline-block text-lg font-bold mb-4 flex items-center">
+                        <x-heroicon-o-clipboard-document-list class="w-6 h-6 text-blue-500 mr-2" />
+                        Mis Tareas
+                    </h3>
+                    <h3 class="ml-3 inline-block text-lg font-bold mb-4 flex items-center">
+                        <x-heroicon-o-clipboard-document-list class="w-6 h-6 text-green-500 mr-2" />
+                        Tareas Asignadas
+                    </h3>
+                </div>
+                @if ($userTasks->isEmpty() && $assignedTasks->isEmpty())
                     <p class="text-gray-500">No hay tareas aún.</p>
                 @else
                     <table class="w-full border-collapse border border-gray-200 rounded-lg shadow-md">
@@ -21,10 +26,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tasks as $task)
+                            @foreach ($userTasks as $task)
                                 <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
                                     <td class="px-4 py-3 flex items-center">
-                                        <x-heroicon-o-document-text class="w-5 h-5 text-gray-500 mr-2" />
+                                        <x-heroicon-o-document-text class="w-5 h-5 text-blue-500 mr-2" />
                                         <a href="{{ route('tasks.show', $task->id) }}" class="text-blue-500 hover:underline">
                                             {{ $task->title }}
                                         </a>
@@ -72,6 +77,42 @@
                                                 <x-heroicon-o-trash class="w-5 h-5 mr-1" />
                                                 Eliminar
                                             </button>
+                                        </form>
+                                    </td>  
+                                </tr>
+                            @endforeach
+                            @foreach ($assignedTasks as $aTask)
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
+                                    <td class="px-4 py-3 flex items-center">
+                                        <x-heroicon-o-document-text class="w-5 h-5 text-green-500 mr-2" />
+                                        <a href="{{ route('tasks.show', $aTask->id) }}" class="text-green-500 hover:underline">
+                                            {{ $aTask->title }}
+                                        </a>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        {{ $aTask->board->name ?? 'Sin tablero' }}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-600">
+                                        {{ $aTask->due_date ? $aTask->due_date->format('d/m/Y') : 'No definida' }}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <span class="text-sm text-gray-700 bg-gray-200 px-2 py-1 rounded">
+                                            {{ implode(', ', $aTask->tags) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-right flex justify-end space-x-2">
+                                        <!-- Dropdown de estado -->
+                                        <form action="{{ route('tasks.updateStatus', $aTask) }}" method="POST" class="inline-block">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="status" onchange="this.form.submit()" 
+                                                    class="w-36 px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700">
+                                                @foreach (\App\Models\Task::getStatuses() as $value => $label)
+                                                    <option value="{{ $value }}" {{ $aTask->status === $value ? 'selected' : '' }}>
+                                                        {{ $label }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </form>
                                     </td>  
                                 </tr>

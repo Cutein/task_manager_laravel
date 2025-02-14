@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const userSpans = selectedUsersContainer.querySelectorAll("span");
 
     let selectedUsers = [];
+
     Array.from(userSpans).map(span => {
         selectedUsers.push(span.getAttribute('data').replaceAll('id-',""));
         usersInput.value = selectedUsers;

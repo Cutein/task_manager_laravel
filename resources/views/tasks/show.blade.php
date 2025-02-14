@@ -16,7 +16,7 @@
                 <p class="text-sm text-gray-500 mt-2">Creada el {{ $task->created_at->format('d/m/Y') }}</p>
 
                 <p><strong>Fecha de vencimiento:</strong> {{ $task->due_date ?$task->due_date->format('d/m/Y'): 'No definida' }}</p>
-                <p><strong>Etiquetas:</strong> {{ implode(', ', $task->tags) }}</p>
+                <p><strong>Etiquetas:</strong> {{ ($task->tags!=null)?implode(', ', $task->tags):''; }}</p>
 
                 <!-- Estado de la Tarea -->
                 <p class="mt-4"><strong>Estado:</strong> 
@@ -25,8 +25,18 @@
                         {{ ucfirst($task->status) }}
                     </span>
                 </p>
+                <div class="mt-3">
+                    <p><strong>Asignado a:</strong> 
+                        @forelse($task->users as $user)
+                            <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded">{{ $user->name }}</span>
+                        @empty
+                            <span class="text-gray-500">No asignado</span>
+                        @endforelse
+                    </p>
+                    
+                </div>
                 <!-- Lista de comentarios -->
-                <h3>Comentarios</h3>
+                <h3 class="mt-4"><strong>Comentarios:</strong></h3>
                 @foreach($task->comments as $comment)
                     <p><strong>{{ $comment->user->name }}</strong>: {{ $comment->content }}</p>
                 @endforeach
@@ -38,18 +48,8 @@
                     <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" type="submit">Comentar</button>
                 </form>
 
-                <div>
-                    <p><strong>Asignado a:</strong> 
-                        @forelse($task->users as $user)
-                            <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded">{{ $user->name }}</span>
-                        @empty
-                            <span class="text-gray-500">No asignado</span>
-                        @endforelse
-                    </p>
-                    
-                </div>
-
                 <!-- Botones de Acción -->
+                @if($task->board->user_id === auth()->id())
                 <div class="mt-6 flex space-x-2">
                     <a href="{{ route('tasks.edit', $task) }}" 
                        class="bg-yellow-500 text-white px-4 py-2 rounded">Editar</a>
@@ -65,6 +65,7 @@
                        class="bg-blue-500 text-white px-4 py-2 rounded">Volver al Tablero</a>
                     @endif
                 </div>
+                @endif
             </div>
         </div>
     </div>

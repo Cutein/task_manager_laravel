@@ -34,7 +34,8 @@ class TaskController extends Controller
     public function store(Request $request, Board $board)
     {
         $request->merge([
-            'users' => explode(',', $request->users[0] ?? '')
+            'users' => explode(',', $request->users[0] ?? ''),
+            'tags' => explode(',', $request->tags[0] ?? '')
         ]);
 
         $request->validate([
@@ -51,10 +52,11 @@ class TaskController extends Controller
             'description' => $request->description,
             'tags' => $request->tags, // Laravel lo convertirá automáticamente a JSON
             'due_date' => $request->due_date,
+            'user_id' =>  auth()->id(),
         ]);
 
         // Asignar usuarios a la tarea
-        if ($request->has('users')) {
+        if ($request->users[0] !== '') {
             $task->users()->sync($request->users);
               // Enviar notificaciones a los usuarios asignados
             foreach ($request->users as $userId) {
@@ -88,7 +90,6 @@ class TaskController extends Controller
         if ($task->board->user_id !== auth()->id()) {
             abort(403, 'No tienes permiso para editar esta tarea.');
         }
-    
         $users = \App\Models\User::all(); // Obtener todos los usuarios
 
         return view('tasks.edit', compact('task', 'users'));
@@ -101,14 +102,14 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $request->merge([
-            'users' => explode(',', $request->users[0] ?? '')
+            'users' => explode(',', $request->users[0] ?? ''),
+            'tags' => explode(',', $request->tags[0] ?? '')
         ]);
         // Verificar si el usuario es dueño del tablero al que pertenece la tarea
         if ($task->board->user_id !== auth()->id()) {
             abort(403, 'No tienes permiso para actualizar esta tarea.');
         }
 
-        // Validar los datos
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -117,16 +118,16 @@ class TaskController extends Controller
             'users' => 'array',
             'users.*' => 'exists:users,id',
         ]);
-    
-        // Actualizar la tarea
+
         $task->update([
             'title' => $request->title,
             'description' => $request->description,
             'tags' => $request->tags,
             'due_date' => $request->due_date,
+            'user_id' => auth()->id(),
         ]);
-    
-        if ($request->has('users')) {
+
+        if ($request->users[0] !== '') {
             $task->users()->sync($request->users); // Asigna los usuarios
             // Enviar notificaciones a los usuarios asignados
             foreach ($request->users as $userId) {
@@ -166,8 +167,19 @@ class TaskController extends Controller
 
     public function allTasks()
     {
-        $tasks = auth()->user()->boards()->with('tasks')->get()->pluck('tasks')->flatten();
-        return view('tasks.index', compact('tasks'));
+        $user = auth()->user();
+        $userTasks = Task::where('user_id', $user->id); // Tareas creadas por el usuario;
+        $assignedTasks = Task::whereHas('users', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
+        }); // Tareas donde el usuario está asignado
+        foreach ($userTasks->get() as $task) {
+            $assignedTasks = $assignedTasks->where('id', '!=', $task->id);
+        }
+
+        return view('tasks.index', [
+            'userTasks' => $userTasks->get(),
+            'assignedTasks' => $assignedTasks->get(),
+        ]);
     }
 
     public function updateStatus(Request $request, Task $task)
@@ -185,5 +197,4 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->route('admin.tasks')->with('success', 'Tarea eliminada correctamente.');
     }
-    
 }

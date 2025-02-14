@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    protected $fillable = ['title', 'description', 'status', 'board_id','due_date', 'tags'];
+    protected $fillable = ['title', 'description', 'status', 'board_id','due_date', 'tags', 'user_id'];
 
     protected $casts = [
         'tags' => 'array', // Convierte `tags` en un array automáticamente
@@ -50,5 +50,14 @@ class Task extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'task_user')->withTimestamps();
+    }
+    public static function getStatusColor($status)
+    {
+        return match ($status) {
+            'pausada' => '#fcd34d',  // Amarillo
+            'en_proceso' => '#60a5fa', // Azul
+            'completada' => '#34d399', // Verde
+            default => '#e5e7eb', // Gris
+        };
     }
 }
