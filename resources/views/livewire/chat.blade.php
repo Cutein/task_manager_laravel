@@ -8,6 +8,11 @@
                     <div class="p-2 border-b cursor-pointer hover:bg-blue-200 {{ $selectedChatUserId === $user['id'] ? 'bg-green-300' : '' }}"
                         wire:click="selectChat({{ $user['id'] }})">
                         <strong>{{ $user['name'] }}</strong>
+                        @if ($user['unread_messages_count'] > 0)
+                            <span class="bg-red-500 text-white px-2 py-1 rounded-full">
+                                {{ $user['unread_messages_count'] }}
+                            </span>
+                        @endif
                     </div>
                 @endforeach
             </div>
@@ -33,3 +38,28 @@
         </div>
     </div>    
 </div>
+<script>
+    function scrollToBottom() {
+        setTimeout(() => {
+            let chatBox = document.getElementById("chat-box");
+            if (chatBox) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }, 100);
+    }
+
+    document.addEventListener("DOMContentLoaded", scrollToBottom);
+
+    window.addEventListener('scrollToBottom', scrollToBottom);
+
+    document.addEventListener('livewire:updated', () => {
+        scrollToBottom();
+    });
+
+    document.addEventListener('livewire:load', () => {
+        scrollToBottom();
+    });
+</script>
+
+
+

@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -77,4 +78,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Task::class, 'task_user')->withTimestamps();
     }
+    public function unreadMessages()
+    {
+        return $this->hasMany(Message::class, 'user_id') // ✅ Mensajes enviados por este usuario
+                    ->where('receiver_id', Auth::id()) // ✅ Solo los dirigidos a mí
+                    ->where('is_read', false); // ✅ Solo los no leídos
+    }
+    
+
 }
