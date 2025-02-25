@@ -1,5 +1,5 @@
-# 📝 Version con Chat en vivo realizado con ECHO y PUSHER
-# 📝 Proyecto de Gestión de Tareas con Laravel I
+# Version con Chat en vivo realizado con ECHO y PUSHER  
+# 📝 Proyecto de Gestión de Tareas con Laravel
 
 Este es un sistema de gestión de tareas desarrollado con **Laravel**, que permite a los usuarios crear, asignar y administrar tareas dentro de tableros organizados.
 
