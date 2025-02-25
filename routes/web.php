@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
@@ -11,6 +12,9 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/chat', function () {
+    return view('chat');
+})->name('chat')->middleware('auth');
 
 Route::middleware([
     'auth:sanctum',

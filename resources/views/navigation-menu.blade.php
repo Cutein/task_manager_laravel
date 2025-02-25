@@ -27,6 +27,10 @@
                     <x-nav-link href="{{ route('tasks.index') }}" :active="request()->routeIs('tasks.index')">
                         {{ __('Tareas') }}
                     </x-nav-link>
+
+                    <x-nav-link href="{{ route('chat') }}" :active="request()->routeIs('chat')">
+                        {{ __('Chat') }}
+                    </x-nav-link>
                 </div>
             </div>
             <div class="hidden sm:flex sm:items-center sm:ms-6">
